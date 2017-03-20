@@ -21,49 +21,47 @@ public class RoutePlannerTest {
     public void setUp() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'u'}, {'v', 'w'}, {'w', 'z'}, {'x', 'u'}, {'y', 'v'}, {'z'}});
-        finalRoute = routePlanner.createFinalRoute();
-
+        finalRoute = routePlanner.findDestinationOrder();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void findRouteWithEmptyList() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{});
-        routePlanner.createFinalRoute();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void finalRouteWithAnEmptyDestinationItem() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'x', 'u'}, {'w'}, {}});
-        routePlanner.createFinalRoute();
+        routePlanner.findDestinationOrder();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void finalRouteWithMoreThanOneRelation() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'x', 'u', 'z'}, {'w'}, {'s'}});
-        routePlanner.createFinalRoute();
+        routePlanner.findDestinationOrder();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void finalRouteWithInvalidRelation() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'x', 'a'}, {'w'}, {'z'}});
-        routePlanner.createFinalRoute();
+        routePlanner.findDestinationOrder();
     }
 
     @Test
     public void finalRouteWithOneDestination() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}});
         List<Character> expected = new ArrayList<>(Arrays.asList('x'));
-        assertEquals(expected, routePlanner.createFinalRoute());
+        assertEquals(expected, routePlanner.findDestinationOrder());
     }
 
     @Test
     public void finalRouteWithThreeDestinationWithoutRelations() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}, {'y'}, {'z'}});
-        assertThat(routePlanner.createFinalRoute(), containsInAnyOrder('x', 'y', 'z'));
+        assertThat(routePlanner.findDestinationOrder(), containsInAnyOrder('x', 'y', 'z'));
     }
 
     @Test
@@ -75,17 +73,17 @@ public class RoutePlannerTest {
     @Test
     public void finalRouteWithManyDestinationsCheckRelations() throws Exception {
         assertThat(finalRoute, containsInAnyOrder('u', 'v', 'w', 'x', 'y', 'z'));
-        assertThat(finalRoute.indexOf('v'), greaterThan(finalRoute.indexOf('w')) );
-        assertThat(finalRoute.indexOf('w'), greaterThan(finalRoute.indexOf('z')) );
-        assertThat(finalRoute.indexOf('x'), greaterThan(finalRoute.indexOf('u')) );
-        assertThat(finalRoute.indexOf('y'), greaterThan(finalRoute.indexOf('v')) );
+        assertThat(finalRoute.indexOf('v'), greaterThan(finalRoute.indexOf('w')));
+        assertThat(finalRoute.indexOf('w'), greaterThan(finalRoute.indexOf('z')));
+        assertThat(finalRoute.indexOf('x'), greaterThan(finalRoute.indexOf('u')));
+        assertThat(finalRoute.indexOf('y'), greaterThan(finalRoute.indexOf('v')));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void finalRouteWithContradictoryRelations() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'x', 'u'}, {'w', 'x'}, {'v'}, {'u', 'y'}, {'z', 'w'}, {'y', 'z'}});
-        routePlanner.createFinalRoute();
+        routePlanner.findDestinationOrder();
     }
 
 

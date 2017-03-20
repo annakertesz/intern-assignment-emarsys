@@ -6,20 +6,20 @@ import java.util.List;
  */
 public class RoutePlanner {
 
-    char[][] destinations;
+    char[][] destinationList;
     List<Character> finalRoute;
 
-    public RoutePlanner(char[][] destinations) throws IllegalArgumentException{
 
-        if (destinations.length < 1) throw new IllegalArgumentException("You have to give at least one destination");
-        this.destinations = destinations;
+    public RoutePlanner(char[][] destinationList) throws IllegalArgumentException {
+        if (destinationList.length < 1) throw new IllegalArgumentException("You have to give at least one destination");
+        this.destinationList = destinationList;
         this.finalRoute = new ArrayList<Character>();
-
     }
 
-    public List<Character> createFinalRoute() throws IllegalArgumentException {
-        addItemsToFinalRoute(destinations);
-        for (char[] destinationPair : destinations) {
+
+    public List<Character> findDestinationOrder() throws IllegalArgumentException {
+        defineRouteList();
+        for (char[] destinationPair : destinationList) {
             if (destinationPair.length == 2) {
                 moveDestination(destinationPair);
             }
@@ -28,13 +28,14 @@ public class RoutePlanner {
         return finalRoute;
     }
 
-    private void addItemsToFinalRoute(char[][] destinations) throws IllegalArgumentException{
-        for (char[] destinationPair : destinations) {
-            if (destinationPair.length > 2) throw new IllegalArgumentException("The destination can contains maximum 1 relation");
+
+    private void defineRouteList() throws IllegalArgumentException {
+        for (char[] destinationPair : destinationList) {
+            if (destinationPair.length > 2)
+                throw new IllegalArgumentException("The destination can contains maximum 1 relation");
             if (destinationPair.length < 1) throw new IllegalArgumentException("Empty destination!");
             finalRoute.add(destinationPair[0]);
         }
-
     }
 
     private void moveDestination(char[] destinationPair) {
@@ -48,7 +49,7 @@ public class RoutePlanner {
     }
 
     private boolean detectContradiction() {
-        for (char[] destinationPair : destinations) {
+        for (char[] destinationPair : destinationList) {
             if (destinationPair.length == 2) {
                 Character firstValue = Character.valueOf(destinationPair[0]);
                 Character secondValue = Character.valueOf(destinationPair[1]);
@@ -58,4 +59,13 @@ public class RoutePlanner {
         }
         return false;
     }
+
+//    private boolean detectLoopInLinkedList() {
+//        int slowIndex = 1;
+//        int fastIndex = 0;
+//        while (true) {
+//            if (destinationList[slowIndex][0] == destinationList[fastIndex][1]);
+//
+//        }
+//    }
 }
