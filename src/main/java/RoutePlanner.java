@@ -24,6 +24,7 @@ public class RoutePlanner {
                 moveDestination(destinationPair);
             }
         }
+        if (detectContradiction()) throw new IllegalArgumentException("There is contradiction in route plan");
         return finalRoute;
     }
 
@@ -33,7 +34,7 @@ public class RoutePlanner {
             if (destinationPair.length < 1) throw new IllegalArgumentException("Empty destination!");
             finalRoute.add(destinationPair[0]);
         }
-        if (detectContradiction()) throw new IllegalArgumentException("There is contradiction in route plan");
+
     }
 
     private void moveDestination(char[] destinationPair) {
@@ -44,7 +45,6 @@ public class RoutePlanner {
             finalRoute.add(indexToPlace, destinationPair[1]);
 
         }
-        System.out.println(finalRoute);
     }
 
     private boolean detectContradiction() {
@@ -53,6 +53,7 @@ public class RoutePlanner {
                 Character firstValue = Character.valueOf(destinationPair[0]);
                 Character secondValue = Character.valueOf(destinationPair[1]);
                 if (finalRoute.indexOf(firstValue) < finalRoute.indexOf(secondValue)) return true;
+
             }
         }
         return false;

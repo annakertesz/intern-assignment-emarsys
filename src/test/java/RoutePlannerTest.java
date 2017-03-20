@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,17 +15,49 @@ import static org.junit.Assert.assertThat;
  */
 public class RoutePlannerTest {
 
+    List<Character> finalRoute;
+
+    @Before
+    public void setUp() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{{'u'}, {'v', 'w'}, {'w', 'z'}, {'x', 'u'}, {'y', 'v'}, {'z'}});
+        finalRoute = routePlanner.createFinalRoute();
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findRouteWithEmptyList() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{});
+        routePlanner.createFinalRoute();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void finalRouteWithAnEmptyDestinationItem() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{{'x', 'u'}, {'w'}, {}});
+        routePlanner.createFinalRoute();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void finalRouteWithMoreThanOneRelation() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{{'x', 'u', 'z'}, {'w'}, {'s'}});
+        routePlanner.createFinalRoute();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void finalRouteWithInvalidRelation() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{{'x', 'a'}, {'w'}, {'z'}});
+        routePlanner.createFinalRoute();
+    }
+
     @Test
     public void finalRouteWithOneDestination() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}});
         List<Character> expected = new ArrayList<>(Arrays.asList('x'));
         assertEquals(expected, routePlanner.createFinalRoute());
-    }
-
-    @Test
-    public void finalRouteContainsSameNumOfDestinations() throws Exception {
-        RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}, {'y', 'x'}, {'z'}});
-        assertEquals(routePlanner.createFinalRoute().size(), 3);
     }
 
     @Test
@@ -34,18 +67,13 @@ public class RoutePlannerTest {
     }
 
     @Test
-    public void finalRouteWithThreeDestinationWithRelations() throws Exception {
-        RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}, {'y', 'x'}, {'z'}});
-        List<Character> finalRoute = routePlanner.createFinalRoute();
-        assertThat(finalRoute, containsInAnyOrder('x', 'y', 'z'));
-        assertThat(finalRoute.indexOf('y'), greaterThan(finalRoute.indexOf('x')) );
+    public void finalRouteContainsSameNumOfDestinations() throws Exception {
+        assertEquals(finalRoute.size(), 6);
     }
+
 
     @Test
     public void finalRouteWithManyDestinationsCheckRelations() throws Exception {
-        RoutePlanner routePlanner = new RoutePlanner(
-                new char[][]{{'u'}, {'v', 'w'}, {'w', 'z'}, {'x', 'u'}, {'y', 'v'}, {'z'}});
-        List<Character> finalRoute = routePlanner.createFinalRoute();
         assertThat(finalRoute, containsInAnyOrder('u', 'v', 'w', 'x', 'y', 'z'));
         assertThat(finalRoute.indexOf('v'), greaterThan(finalRoute.indexOf('w')) );
         assertThat(finalRoute.indexOf('w'), greaterThan(finalRoute.indexOf('z')) );
@@ -54,7 +82,7 @@ public class RoutePlannerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void finalRouteWithContradictorykRelations() throws Exception {
+    public void finalRouteWithContradictoryRelations() throws Exception {
         RoutePlanner routePlanner = new RoutePlanner(
                 new char[][]{{'x', 'u'}, {'w', 'x'}, {'v'}, {'u', 'y'}, {'z', 'w'}, {'y', 'z'}});
         routePlanner.createFinalRoute();
