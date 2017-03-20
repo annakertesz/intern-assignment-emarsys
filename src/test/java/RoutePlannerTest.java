@@ -38,7 +38,7 @@ public class RoutePlannerTest {
         RoutePlanner routePlanner = new RoutePlanner(new char[][]{{'x'}, {'y', 'x'}, {'z'}});
         List<Character> finalRoute = routePlanner.createFinalRoute();
         assertThat(finalRoute, containsInAnyOrder('x', 'y', 'z'));
-        assertThat(finalRoute.indexOf('x'), greaterThan(finalRoute.indexOf('y')) );
+        assertThat(finalRoute.indexOf('y'), greaterThan(finalRoute.indexOf('x')) );
     }
 
     @Test
@@ -51,6 +51,13 @@ public class RoutePlannerTest {
         assertThat(finalRoute.indexOf('w'), greaterThan(finalRoute.indexOf('z')) );
         assertThat(finalRoute.indexOf('x'), greaterThan(finalRoute.indexOf('u')) );
         assertThat(finalRoute.indexOf('y'), greaterThan(finalRoute.indexOf('v')) );
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void finalRouteWithContradictorykRelations() throws Exception {
+        RoutePlanner routePlanner = new RoutePlanner(
+                new char[][]{{'x', 'u'}, {'w', 'x'}, {'v'}, {'u', 'y'}, {'z', 'w'}, {'y', 'z'}});
+        routePlanner.createFinalRoute();
     }
 
 
